@@ -23,7 +23,7 @@ class InvitationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'name' => 'required|string',
             'organization_id' => 'nullable|exists:organizations,id',
         ];

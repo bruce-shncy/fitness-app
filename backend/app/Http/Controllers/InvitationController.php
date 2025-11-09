@@ -30,10 +30,9 @@ class InvitationController extends Controller
     {
       
         $invitation = DB::transaction(function () use ($request) {
-            $user = User::create([
-                'name' => $request->name, 
-                'email' => $request->email
-            ]);
+            $user = User::firstOrCreate(
+['email' => $request->email],
+    ['name' => $request->name, 'password' => '']);
 
             $invitation = Invitation::create([
                 'organization_id' => $request->input('organization_id'),

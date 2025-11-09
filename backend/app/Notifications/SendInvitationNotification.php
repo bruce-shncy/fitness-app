@@ -42,9 +42,9 @@ class SendInvitationNotification extends Notification
      */
     public function toMail(object $notifiable): CoachInviteOrganization
     {
-        return new CoachInviteOrganization(
+        return (new CoachInviteOrganization(
             invitation: $this->invitation
-        );
+        ))->to($notifiable->email);
     }
 
     /**
