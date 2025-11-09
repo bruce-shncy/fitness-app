@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Invitation;
 use App\Models\Organization;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,10 +21,7 @@ class CoachInviteOrganization extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public User $user,
-        public Organization $organization,
-        public string $inviteUrl, 
-        public ?Carbon $expiresAt = null
+        public Invitation $invitation,
     )
     {
         
@@ -35,7 +33,7 @@ class CoachInviteOrganization extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "You've been invited to join {$this->organization->name} as Coach",
+            subject: "You've been invited to join {$this->invitation->organization->name} as Coach",
         );
     }
 
@@ -47,10 +45,10 @@ class CoachInviteOrganization extends Mailable
         return new Content(
             markdown: 'mail.coach.invitation',
             with: [
-                'user' => $this->user,
-                'organization' => $this->organization,
-                'inviteUrl' => $this->inviteUrl,
-                'expiresHuman' => $this->expiresAt ? $this->expiresAt->diffForHumans() : null
+                'user' => $this->invitation->userInvited,
+                'organization' => $this->invitation->organization,
+                'inviteUrl' => $this->invitation->invite_url,
+                'expiresHuman' => $this->invitation->expires_at ? $this->invitation->expires_at->diffForHumans() : null
             ],
         );
     }

@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\InvitationController;
 use App\Mail\CoachInviteOrganization;
+use App\Models\Invitation;
 use App\Models\Organization;
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
 
@@ -18,6 +20,7 @@ Route::prefix('admin')
     ->as('admin.')
     ->group(function () {
         Route::apiResource('organization', OrganizationController::class);
+        Route::apiResource('/invitation', InvitationController::class);
 });
 
 Route::prefix('mail-preview')
@@ -26,8 +29,16 @@ Route::prefix('mail-preview')
         Route::get('/coach/invitation', function () {
             $user = User::factory()->create();
             $organization = Organization::factory()->create();
-            $invitationUrl = 'test';
-            $expiresAt = Carbon::now()->addHours(72);
-            return new CoachInviteOrganization($user, $organization, $invitationUrl, $expiresAt);
+            
+            $invitation = Invitation::create([
+                'organization_id' => $organization? $organization->id : null,
+                'user_id' => $user->id,
+                'role' => Role::COACH,
+                'token' => Str::random(64),
+                'expires_at' => now()->addDays(3),
+                'invited_at' => now()
+            ]);
+
+            return new CoachInviteOrganization($invitation);
         });
     });
