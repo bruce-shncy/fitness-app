@@ -3,10 +3,12 @@ import React from "react";
 import useOrganization from "@/services/organization.service";
 import { AiOutlineDelete } from "react-icons/ai";
 import { AiOutlineEdit } from "react-icons/ai";
+import { Organization } from "@/app/types/organization.type";
 
 export const DisplayOrganiztion: React.FC = () => {
     const { organizations, error, isLoading } = useOrganization();
-    console.log("allOrganizations", organizations);
+   
+
     if (isLoading) {
         return (
             <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>
@@ -31,8 +33,6 @@ export const DisplayOrganiztion: React.FC = () => {
         );
     }
 
-    const allOrganizations = organizations?.data ?? [];
-
     return (
         <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>
             <h3 className='text-sm font-semibold tracking-tight'>
@@ -40,17 +40,17 @@ export const DisplayOrganiztion: React.FC = () => {
             </h3>
 
             <ul className='mt-5 space-y-4'>
-                {[1, 2].map((id) => (
+                {organizations.map((organization: Organization) => (
                     <li
-                        key={id}
+                        key={organization.id}
                         className='flex flex-col gap-3 rounded-lg border border-mid-night/60 px-4 py-3 md:flex-row md:items-center md:justify-between hover:bg-dark-night/80 transition-colors'
                     >
                         <div>
-                            <p className='text-sm font-medium'>
-                                DeciFit Gym HQ
+                            <p className='text-sm font-medium capitalize'>
+                                {organization.name}
                             </p>
-                            <p className='text-xs text-carbon-gray tracking-tight'>
-                                123 Fitness Street, London
+                            <p className='text-xs text-carbon-gray tracking-tight capitalize'>
+                                {organization.address}
                             </p>
                         </div>
                         <div className='flex items-center justify-between gap-3 text-xs text-carbon-gray md:justify-end'>

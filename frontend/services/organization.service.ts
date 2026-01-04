@@ -13,20 +13,20 @@ const fetcher = async (url: typeof key): Promise<ApiOrganizationListResponse<Org
         err.status = response.status;
         throw err;
     }
-    
+
     return response.json();
 }
 
 const useOrganization = () => {
-    const {data, error, isLoading} = useSWR
-        <ApiOrganizationListResponse<Organization[]>,
+    const {data, error, isLoading, mutate} = useSWR<
+        ApiOrganizationListResponse<Organization[]>,
         ApiError,
         typeof key
     >
     ('/api/auth/admin/organizations', fetcher)
 
     return {
-        organizations: data,
+        organizations: data?.data ?? [],
         error,
         isLoading,
     };

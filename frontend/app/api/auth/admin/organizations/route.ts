@@ -17,7 +17,7 @@ export const GET  = async () => {
         Authorization: `Bearer ${token?.value}`
     }
 
-    const { data } = await request<ApiOrganizationListResponse<Organization[]>>(
+    const data = await request<ApiOrganizationListResponse<Organization[]>>(
         '/admin/organization', 
         "GET", 
         headers
