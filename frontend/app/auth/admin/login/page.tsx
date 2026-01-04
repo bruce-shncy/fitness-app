@@ -11,14 +11,11 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { toast } from "sonner";
 
-import { loginAsAdmin } from "@/services/auth.service";
-import { setToken } from "@/lib/api";
 
 const loginSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
     password: z.string().min(1, "Password is required"),
 });
-
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -36,19 +33,16 @@ export const Login = () => {
 
     const onSubmit = async (data: LoginFormValues) => {
         setIsLoading(true);
+
         try {
-            const response = await loginAsAdmin(data);
-            const token =
-                response &&
-                typeof response === "object" &&
-                "accessToken" in response
-                    ? (response as { accessToken: string }).accessToken
-                    : null;
-
-            if (token) {
-                setToken(token);
-            }
-
+            const response = await fetch("/api/auth/admin/login", {
+                method: 'POST', 
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+            });
+ 
             toast.success("Welcome back");
             router.push("/admin/organizations");
         } catch (error: unknown) {

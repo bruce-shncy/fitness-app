@@ -1,41 +1,43 @@
 export type AdminNavItem = {
     name: string;
     href: string;
-    icon?: any
-}
+    icon?: string; // simple emoji/icon string for now
+};
 
 export type AdminNavSection = {
-    title: string; 
-    items: AdminNavItem[]
-}
+    title: string;
+    items: AdminNavItem[];
+};
 
 export const adminNav: AdminNavSection[] = [
     {
-        title: "Overview", 
+        title: "Overview",
         items: [
             {
-              name: "Dashboard",
-              href: "/admin/dashboard",
-              icon: "test"
-            }
-        ]
+                name: "Dashboard",
+                href: "/admin/dashboard",
+                icon: "🏠",
+            },
+        ],
     },
     {
         title: "People",
         items: [
             {
                 name: "Organizations",
-                href: "/admin/coaches"
+                href: "/admin/organizations",
+                icon: "🏢",
             },
             {
                 name: "Coaches",
-                href: "/admin/coaches"
+                href: "/admin/coaches",
+                icon: "🏋️",
             },
             {
                 name: "Clients",
-                href: "/admin/coaches"
-            }
-        
-        ]
-    }
-]
+                href: "/admin/clients",
+                icon: "👥",
+            },
+        ],
+    },
+];

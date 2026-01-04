@@ -1,7 +1,5 @@
 import { API_BASE_URL } from "./config";
 
-const ACCESS_TOKEN_STORAGE_KEY = "fitnessapp_admin_token";
-
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 type ApiError = {
@@ -9,20 +7,17 @@ type ApiError = {
     error: Record<string, string>;
 };
 
-const getToken = (): string | null => {
-    if (typeof window === "undefined") return null;
-    return window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
-};
 
-export const setToken = (token: string) => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, token);
-};
+/**
+ * Ensure all request are CSRF protected
+ */
 
-export const clearToken = () => {
-    if (typeof window === "undefined") return;
-    window.localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-};
+const ensureCsrfCookie = async () => {
+    await fetch(`${API_BASE_URL?.replace("/api","")}/sanctum/csrf-cookie`, {
+        method: 'GET',
+        'credentials': 'include',
+    })
+}
 
 /**
  * Creating request wrapper function
@@ -34,31 +29,34 @@ export const clearToken = () => {
 export const request = async <T>(
     path: string,
     method: HttpMethod = "GET",
+    headerConfig: Record<string, string>,
     body?: unknown
 ): Promise<T> => {
     // Create headers
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
         Accept: "application/json",
+        ... (headerConfig ?? {})
     };
-
-    const token = getToken();
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
 
     // Create request config
     const requestConfig: RequestInit = {
         method,
         headers,
+        credentials: 'include',
     };
 
+    if (method !==  "GET") {
+         await ensureCsrfCookie()
+    }
+    
     if (body && method !== "GET") {
         requestConfig.body = JSON.stringify(body);
     }
 
     try {
         // Create request
+    
         const response = await fetch(`${API_BASE_URL}${path}`, requestConfig);
 
         if (!response.ok) {

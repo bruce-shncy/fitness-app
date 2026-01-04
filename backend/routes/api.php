@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 Route::post('/admin/login', [AuthenticationController::class, "loginAsAdmin"])->name('admin.login');
 Route::get('/admin/logout', [AuthenticationController::class, 'logout'])->name('admin.logout');
@@ -21,6 +22,10 @@ Route::prefix('admin')
     ->group(function () {
         Route::apiResource('organization', OrganizationController::class);
         Route::apiResource('/invitation', InvitationController::class);
+});
+
+Route::middleware('auth:sanctum')->get('/get', function (Request $request) {
+    return $request->user();
 });
 
 Route::prefix('mail-preview')

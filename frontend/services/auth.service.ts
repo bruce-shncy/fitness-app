@@ -1,3 +1,4 @@
+import { IUser } from "@/app/types/user.type";
 import { request } from "@/lib/api";
 
 interface AdminLoginPayload {
@@ -5,7 +6,12 @@ interface AdminLoginPayload {
     password: string;
 }
 
-export const loginAsAdmin = async (payload: AdminLoginPayload) => {
+interface LoginResponse {
+    user: IUser
+    accessToken: string
+}
+
+export const loginAsAdmin = async (payload: AdminLoginPayload): Promise<LoginResponse> => {
     return request(`/admin/login`, "POST", payload);
 };
 
