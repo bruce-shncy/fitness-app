@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import useOrganization from "@/services/organization.service";
+import useOrganization from "@/services/swr/organization.swr";
 import { AiOutlineDelete } from "react-icons/ai";
 import { AiOutlineEdit } from "react-icons/ai";
 import { Organization } from "@/app/types/organization.type";
@@ -8,7 +8,6 @@ import { Organization } from "@/app/types/organization.type";
 export const DisplayOrganiztion: React.FC = () => {
     const { organizations, error, isLoading } = useOrganization();
    
-
     if (isLoading) {
         return (
             <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import useOrganization from "@/services/swr/organization.swr";
+import { organization } from "@/services/organization.service";
 
 const formSchema = z.object({
     name: z.string().min(1, { message: "Organization name is required" }),
@@ -15,6 +17,7 @@ const formSchema = z.object({
 type OrganizationFormType = z.infer<typeof formSchema>;
 
 export const CreateOrganizationForm = () => {
+    const { mutate} = useOrganization();
     const form = useForm<OrganizationFormType>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -23,8 +26,16 @@ export const CreateOrganizationForm = () => {
         },
     });
 
-    const onSubmit = (data: OrganizationFormType) => {
+    const onSubmit = async (data: OrganizationFormType) => {
         console.log("submitted data", data);
+
+        try {
+            const response = await organization.create(data);
+            console.log(response)
+            mutate()
+        } catch (e) {
+            
+        }
     };
 
     return (
