@@ -4,33 +4,27 @@ import useOrganization from "@/services/swr/organization.swr";
 import { AiOutlineDelete } from "react-icons/ai";
 import { AiOutlineEdit } from "react-icons/ai";
 import { Organization } from "@/app/types/organization.type";
+import Loading from "@/components/Organizations/Loading";
+import Error from "@/components/Organizations/Error";
+import { cn } from "@/lib/utils";
 
-export const DisplayOrganiztion: React.FC = () => {
+interface IDisplayOrganiztion {
+    handleEdit: (organization: Organization) => void
+    selectedOrgId?: number
+}
+
+export const DisplayOrganiztion: React.FC<IDisplayOrganiztion> = ({
+    handleEdit,
+    selectedOrgId
+}) => {
     const { organizations, error, isLoading } = useOrganization();
-   
-    if (isLoading) {
-        return (
-            <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>
-                <h3 className='text-sm font-semibold tracking-tight'>
-                    All organizations
-                </h3>
-                <p className='mt-4 text-xs text-carbon-gray'>Loading...</p>
-            </div>
-        );
-    }
 
-    if (error) {
-        return (
-            <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-red-500/60 shadow-sm'>
-                <h3 className='text-sm font-semibold tracking-tight'>
-                    All organizations
-                </h3>
-                <p className='mt-4 text-xs text-red-400'>
-                    Failed to load organizations.
-                </p>
-            </div>
-        );
-    }
+    <>
+        <Loading isLoading={isLoading }/>
+        <Error error={error} />
+    </>
+
+    console.log('selectedOrgId >', selectedOrgId)
 
     return (
         <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>
@@ -42,7 +36,11 @@ export const DisplayOrganiztion: React.FC = () => {
                 {organizations.map((organization: Organization) => (
                     <li
                         key={organization.id}
-                        className='flex flex-col gap-3 rounded-lg border border-mid-night/60 px-4 py-3 md:flex-row md:items-center md:justify-between hover:bg-dark-night/80 transition-colors'
+                        className={
+                            cn('flex flex-col gap-3 rounded-lg border border-mid-night/60 px-4 py-3 md:flex-row md:items-center md:justify-between hover:bg-dark-night/80 hover:pointer transition-colors',
+                                selectedOrgId === organization.id && "bg-dark-night/80"
+                            )
+                        }
                     >
                         <div>
                             <p className='text-sm font-medium capitalize'>
@@ -57,7 +55,12 @@ export const DisplayOrganiztion: React.FC = () => {
                             <div className='flex items-center gap-3'>
                                 <button
                                     type='button'
-                                    className='inline-flex cursor-pointer items-center gap-1 text-carbon-gray hover:text-platinum transition-colors'
+                                    onClick={() => handleEdit(organization)}
+                                    className={
+                                        cn('inline-flex cursor-pointer items-center gap-1 text-carbon-gray hover:text-platinum transition-colors',
+                                            selectedOrgId === organization.id && "text-blue-500"
+                                        )
+                                    }
                                 >
                                     <AiOutlineEdit className='h-3 w-3' />
                                     <span>Edit</span>

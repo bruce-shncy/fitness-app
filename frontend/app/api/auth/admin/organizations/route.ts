@@ -1,6 +1,7 @@
 import { ApiOrganizationListResponse, Organization } from "@/app/types/organization.type";
 import { request } from "@/lib/api";
 import { withAuth } from "@/lib/server/requireAuth";
+import { ApiError } from "@/services/swr/organization.swr";
 import { NextResponse } from "next/server";
 
 export type OrganizationFormType = {
@@ -25,7 +26,7 @@ export const GET  = async () => {
 export const POST = async (req: Request) => {
 
     const payload = await req.json()
-    console.log('payload >', payload)
+ 
     return withAuth(async ({ headers }) => {
         try {
             const created = await request<Organization>(
@@ -43,4 +44,27 @@ export const POST = async (req: Request) => {
             return NextResponse.json(details, { status });
         }
   });
+}
+
+export const PUT = async (req: Request) => {
+    
+    const payload = await req.json()
+
+    return withAuth(async ({ headers }) => {
+        try {
+            const updated = await request<Organization>(
+                "/admin/organization", 
+                "PUT",
+                headers, 
+                payload
+            )
+
+            return NextResponse.json(updated, {status: 201})
+        } catch (err: any) {
+            // preserve Laravel status + error body instead of turning into 500
+            const status = err?.status ?? 500;
+            const details = err?.details ?? { message: "Request failed" };
+            return NextResponse.json(details, { status });
+        }
+    })
 }

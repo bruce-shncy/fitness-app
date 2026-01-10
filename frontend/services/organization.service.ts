@@ -6,10 +6,20 @@ const ORGANIZATION_URL =  '/api/auth/admin/organizations'
 
 export const organization = {
     
+    
     create: (payload: OrganizationFormType) => clientApiFetch<Organization, OrganizationFormType>(
         ORGANIZATION_URL, {
           method: 'POST',
           body: payload
         }
-    )
+    ),
+
+    update: (id: number, payload: OrganizationFormType) =>
+        clientApiFetch<Organization, OrganizationFormType>(
+            `${ORGANIZATION_URL}/${id}`,
+            {
+                method: "PUT",
+                body: payload,
+            }
+        ),
 }
