@@ -45,26 +45,3 @@ export const POST = async (req: Request) => {
         }
   });
 }
-
-export const PUT = async (req: Request) => {
-    
-    const payload = await req.json()
-
-    return withAuth(async ({ headers }) => {
-        try {
-            const updated = await request<Organization>(
-                "/admin/organization", 
-                "PUT",
-                headers, 
-                payload
-            )
-
-            return NextResponse.json(updated, {status: 201})
-        } catch (err: any) {
-            // preserve Laravel status + error body instead of turning into 500
-            const status = err?.status ?? 500;
-            const details = err?.details ?? { message: "Request failed" };
-            return NextResponse.json(details, { status });
-        }
-    })
-}

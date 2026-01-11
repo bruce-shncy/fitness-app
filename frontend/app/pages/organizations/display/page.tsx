@@ -7,6 +7,8 @@ import { Organization } from "@/app/types/organization.type";
 import Loading from "@/components/Organizations/Loading";
 import Error from "@/components/Organizations/Error";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/providers/dialogs/AppDialogProvider";
+import { Button } from "@/components/ui/button";
 
 interface IDisplayOrganiztion {
     handleEdit: (organization: Organization) => void
@@ -18,13 +20,33 @@ export const DisplayOrganiztion: React.FC<IDisplayOrganiztion> = ({
     selectedOrgId
 }) => {
     const { organizations, error, isLoading } = useOrganization();
+    const {openDialog, closeDialog} = useDialog();
 
     <>
         <Loading isLoading={isLoading }/>
         <Error error={error} />
     </>
 
-    console.log('selectedOrgId >', selectedOrgId)
+    const deleteOrg = () => {
+        openDialog(
+            <div className="space-y-3">
+                <p>Delete this item?</p>
+                <div className="flex gap-2">
+                    <Button 
+                        variant="outline" 
+                        onClick={closeDialog}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={() => { closeDialog(); }}
+                    >
+                        Confirm
+                    </Button>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-mid-night/60 shadow-sm'>
@@ -67,6 +89,7 @@ export const DisplayOrganiztion: React.FC<IDisplayOrganiztion> = ({
                                 </button>
                                 <button
                                     type='button'
+                                    onClick={deleteOrg}
                                     className='inline-flex cursor-pointer items-center gap-1 text-red-400 hover:text-red-300 transition-colors'
                                 >
                                     <AiOutlineDelete className='h-3 w-3' />

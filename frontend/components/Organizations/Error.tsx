@@ -11,7 +11,7 @@ export const Error: React.FC<IError> = ({
 }) => {
     if (error) {
         return (
-        <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-red-500/60 shadow-sm'>
+             <div className='rounded-xl bg-mid-night/90 px-6 py-7 border border-red-500/60 shadow-sm'>
                 <h3 className='text-sm font-semibold tracking-tight'>
                     All organizations
                 </h3>

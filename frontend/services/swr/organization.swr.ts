@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 const key = "/api/auth/admin/organizations" as const;
 
-type ApiError = Error & { status?: number };
+export type ApiError = Error & { status?: number };
 
 const fetcher = async (url: typeof key): Promise<ApiOrganizationListResponse<Organization[]>> => {
     const response = await fetch(url,  {method: 'GET'});
