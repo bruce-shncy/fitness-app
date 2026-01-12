@@ -1,5 +1,6 @@
 "use client"
 
+import { useOrganizationAction } from "@/app/pages/organizations/actions/useOrganizations";
 import { DisplayOrganiztion } from "@/app/pages/organizations/display/page";
 import { CreateOrganizationForm } from "@/app/pages/organizations/forms/create";
 import { Organization } from "@/app/types/organization.type";
@@ -7,7 +8,7 @@ import { useState } from "react";
 
 const OrganizationsPage = () => {
     
-    const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null)
+    const {selectedOrganization, setSelectedOrganization, rowActions} = useOrganizationAction();
 
     return (
         <main className='w-full min-h-screen bg-dark-night text-platinum px-6 py-8 md:px-10 md:py-12'>
@@ -27,8 +28,8 @@ const OrganizationsPage = () => {
                         clearSelection={() => setSelectedOrganization(null)}
                     />
                     <DisplayOrganiztion 
-                        handleEdit={(org: Organization) => setSelectedOrganization(org)}
                         selectedOrgId={selectedOrganization?.id}
+                        rowActions={rowActions}
                     />
                 </section>
             </div>
