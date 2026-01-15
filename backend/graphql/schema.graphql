@@ -1,0 +1,28 @@
+"A fitness organization (gym, studio, etc.)"
+
+type Organization {
+  id: ID 
+  name: String! 
+  address: String 
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"Represents a datetime in ISO 8601 Format"
+scalar DateTime @scalar(class:
+"Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime"
+)
+
+type Query {
+  "Get all organizations (requires authentication)"
+  organizations: [Organization!]! @all @guard
+
+  "Get current authenticated user"
+  me: User @auth
+}
+
+type User {
+  id: ID!
+  name: String! 
+  email: String!
+}
