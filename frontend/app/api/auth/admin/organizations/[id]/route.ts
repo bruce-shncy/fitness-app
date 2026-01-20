@@ -32,9 +32,10 @@ export const DELETE = async (
     req: NextRequest,
     { params }: { params: { id?: string } }
 ) => {
-    const organizationId = params?.id ?? req.nextUrl.pathname.split("/").pop();
+ 
+    const { id } = await params
 
-    if (!organizationId) {
+    if (!id) {
         return NextResponse.json(
             { message: "Organization id is required" },
             { status: 400 }
@@ -43,15 +44,16 @@ export const DELETE = async (
 
     return withAuth(async ({ headers }) => {
         try {
-            await request(
-                `/admin/organization/${organizationId}`,
+            const response = await request(
+                `/admin/organization/${id}`,
                 "DELETE",
                 headers
             );
-            return NextResponse.json(null, { status: 204 });
+
+            return NextResponse.json(response, { status: 200 });
         } catch (err: any) {
             const status = err?.status ?? 500;
-            const details = err?.details ?? { message: "Request failed" };
+            const details = err?.details ?? { message:  err };
             return NextResponse.json(details, { status });
         }
     });

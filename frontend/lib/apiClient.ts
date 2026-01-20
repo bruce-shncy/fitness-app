@@ -33,5 +33,6 @@ export const clientApiFetch = async<TResponse, TBody = unknown>(
 
     if (response.status === 204) return null as TResponse
 
-    return (await response.json()) as TResponse
+    const data = await response.json();
+    return { status: response.status, data } as TResponse;
 }

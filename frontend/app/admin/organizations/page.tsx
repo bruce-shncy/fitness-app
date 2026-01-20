@@ -1,10 +1,8 @@
 "use client"
 
 import { useOrganizationAction } from "@/app/pages/organizations/actions/useOrganizations";
-import { DisplayOrganiztion } from "@/app/pages/organizations/display/page";
+import { DisplayOrganization } from "@/app/pages/organizations/display/page";
 import { CreateOrganizationForm } from "@/app/pages/organizations/forms/create";
-import { Organization } from "@/app/types/organization.type";
-import { useState } from "react";
 
 const OrganizationsPage = () => {
     
@@ -27,7 +25,7 @@ const OrganizationsPage = () => {
                         selectedOrganization={selectedOrganization}
                         clearSelection={() => setSelectedOrganization(null)}
                     />
-                    <DisplayOrganiztion 
+                    <DisplayOrganization 
                         selectedOrgId={selectedOrganization?.id}
                         rowActions={rowActions}
                     />

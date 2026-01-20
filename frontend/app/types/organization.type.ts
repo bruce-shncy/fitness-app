@@ -12,6 +12,11 @@ export type OrganizationPayload = {
     address: string;
 };
 
+export type DeleteOrganizationResponse = {
+    message: string
+    status: number
+}
+
 export type ApiOrganizationListResponse<T> = {
     data: T;
 };

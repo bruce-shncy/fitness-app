@@ -58,7 +58,7 @@ export const request = async <T>(
         // Create request
     
         const response = await fetch(`${API_BASE_URL}${path}`, requestConfig);
-
+       
         if (!response.ok) {
             let details: ApiError | undefined;
             try {
@@ -88,8 +88,9 @@ export const request = async <T>(
             return null as unknown as T;
         }
 
+        
         const text = await response.text();
-
+        console.log('text', text)
         try {
             return JSON.parse(text) as T;
         } catch {
