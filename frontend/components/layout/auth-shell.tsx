@@ -11,7 +11,6 @@ export const AuthShellLayout = ({
     return (
         <div className='min-h-screen bg-dark-night w-full flex'>
             <Sidebar navListItems={adminNav} />
-            <Header />
             {children}
         </div>
     );
