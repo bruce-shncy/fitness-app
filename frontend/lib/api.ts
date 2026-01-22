@@ -90,7 +90,7 @@ export const request = async <T>(
 
         
         const text = await response.text();
-        console.log('text', text)
+
         try {
             return JSON.parse(text) as T;
         } catch {
