@@ -28,4 +28,5 @@ class InvitationRequest extends FormRequest
             'organization_id' => 'nullable|exists:organizations,id',
         ];
     }
+
 }

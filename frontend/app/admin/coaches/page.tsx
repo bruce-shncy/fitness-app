@@ -22,28 +22,38 @@ const CoachesPage = () => {
     }, [setSettings]);
 
     return (
-        <div className="text-platinum">
-            <div className="flex justify-end mb-6">
+        <div className='text-platinum'>
+            <div className='flex justify-end mb-6'>
                 <Button
                     onClick={handleInviteCoach}
-                    className="bg-platinum text-night hover:bg-platinum/90"
+                    className='bg-platinum text-night hover:bg-platinum/90'
                 >
-                    <AiOutlinePlus className="h-4 w-4 mr-2" />
+                    <AiOutlinePlus className='h-4 w-4 mr-2' />
                     Invite Coach
                 </Button>
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="bg-mid-night/60 border border-mid-night/60">
-                    <TabsTrigger value="coaches">Coaches</TabsTrigger>
-                    <TabsTrigger value="invitations">Invitations</TabsTrigger>
+                <TabsList className='bg-mid-night/60 border border-mid-night/60 text-white'>
+                    <TabsTrigger
+                        className='data-[state=active]:bg-platinum data-[state=active]:text-mid-night text-white'
+                        value='coaches'
+                    >
+                        Coaches
+                    </TabsTrigger>
+                    <TabsTrigger
+                        className='data-[state=active]:bg-platinum data-[state=active]:text-mid-night text-white'
+                        value='invitations'
+                    >
+                        Invitations
+                    </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="coaches" className="mt-6">
+                <TabsContent value='coaches' className='mt-6'>
                     <DisplayCoaches />
                 </TabsContent>
 
-                <TabsContent value="invitations" className="mt-6">
+                <TabsContent value='invitations' className='mt-6'>
                     <DisplayInvitations rowActions={rowActions} />
                 </TabsContent>
             </Tabs>

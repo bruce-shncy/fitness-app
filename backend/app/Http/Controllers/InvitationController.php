@@ -3,15 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InvitationRequest;
-use App\Jobs\SendInvitation;
-use App\Mail\CoachInviteOrganization;
-use App\Models\Invitation;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use App\Services\InvitationServices;
 
 class InvitationController extends Controller
 {
@@ -26,30 +18,40 @@ class InvitationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvitationRequest $request)
+    public function store(
+        InvitationRequest $request,
+        InvitationServices $invitationService
+    )
     {
-      
-        $invitation = DB::transaction(function () use ($request) {
-            $user = User::firstOrCreate(
-    ['email' => $request->email],
-        ['name' => $request->name, 'password' => ''
-            ]);
+        try {
+            // Process the invitation
+            $invitationService->make()
+                ->with($request)
+                ->createInvitation();
 
-            $invitation = Invitation::create([
-                'organization_id' => $request->input('organization_id'),
-                'user_id' => $user->id,
-                'role' => Role::COACH,
-                'token' => Str::random(64),
-                'expires_at' => now()->addDays(3),
-                'invited_at' => now()
-            ]);
+            // Return success response with 201 Created status
+            return response()->json([
+                'message' => 'Invitation sent successfully',
+                'data' => [
+                    'email' => $request->email,
+                    'expires_at' => now()->addDays(3)->toISOString()
+                ]
+            ], 201);
 
-            return $invitation;
-        });
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Database errors (connection, constraint violations, etc.)
+            return response()->json([
+                'message' => 'Failed to create invitation due to database error',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
 
-        DB::afterCommit(function () use ($invitation) {
-            SendInvitation::dispatch($invitation);
-        });
+        } catch (\Exception $e) {
+            // Any other unexpected errors
+            return response()->json([
+                'message' => 'Failed to send invitation',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
     }
 
     /**

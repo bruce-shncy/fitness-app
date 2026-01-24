@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type SelectOption = {
-    value: string;
+    value: string | number;
     label: string;
 };
 
@@ -25,7 +25,7 @@ type FieldSelectProps<TFieldValues extends FieldValues> = {
     placeholder?: string;
     helperText?: string;
     disabled?: boolean;
-
+    valueType?: "string" | "number";
     /** Custom classes */
     className?: string;
     selectClassName?: string;
@@ -43,6 +43,7 @@ const FieldSelect = <TFieldValues extends FieldValues>({
     className,
     selectClassName,
     labelClassName,
+    valueType,
 }: FieldSelectProps<TFieldValues>) => {
     return (
         <FormField
@@ -56,7 +57,7 @@ const FieldSelect = <TFieldValues extends FieldValues>({
                             className={cn(
                                 "text-sm font-medium",
                                 hasError && "text-destructive",
-                                labelClassName
+                                labelClassName,
                             )}
                         >
                             {label}
@@ -65,6 +66,16 @@ const FieldSelect = <TFieldValues extends FieldValues>({
                             <select
                                 {...field}
                                 disabled={disabled}
+                                value={field.value ?? ""}
+                                onChange={(event) =>
+                                    valueType === "number"
+                                        ? field.onChange(
+                                              event.target.value == ""
+                                                  ? undefined
+                                                  : Number(event.target.value),
+                                          )
+                                        : field.onChange(event.target.value)
+                                }
                                 className={cn(
                                     `
                                     w-full
@@ -88,17 +99,20 @@ const FieldSelect = <TFieldValues extends FieldValues>({
                                     disabled:cursor-not-allowed
                                     disabled:opacity-50
                                     `,
-                                    selectClassName
+                                    selectClassName,
                                 )}
                             >
-                                <option value="" className="bg-dark-night text-carbon-gray">
+                                <option
+                                    value=''
+                                    className='bg-dark-night text-carbon-gray'
+                                >
                                     {placeholder}
                                 </option>
                                 {options.map((option) => (
                                     <option
                                         key={option.value}
                                         value={option.value}
-                                        className="bg-dark-night text-platinum"
+                                        className='bg-dark-night text-platinum'
                                     >
                                         {option.label}
                                     </option>
