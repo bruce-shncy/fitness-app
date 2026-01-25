@@ -13,7 +13,9 @@ class InvitationController extends Controller
      */
     public function index()
     {
-        $invitations = Invitation::get()->latest();
+        $invitations = Invitation::with('userInvited')
+                        ->latest()
+                        ->get();
 
         return response()->json([
             'data' => $invitations

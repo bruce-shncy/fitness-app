@@ -12,7 +12,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ navListItems }) => {
     const pathname = usePathname()
     return (
-        <aside className='h-screen w-64 flex flex-col bg-mid-night text-platinum border-r border-r-mid-night/50 py-8 px-6'>
+        <aside className='sticky top-0 h-screen w-64 flex flex-col bg-mid-night text-platinum border-r border-r-mid-night/50 py-8 px-6'>
             <div className='flex gap-3 items-center mb-6 cursor-pointer hover:bg-platinum/5 rounded-md p-1 transition-colors'>
                 <div className='flex items-center justify-center h-8 w-8 bg-platinum/10 rounded-lg text-xs font-medium'>
                     DF
