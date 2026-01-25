@@ -3,42 +3,48 @@ import { NextResponse } from "next/server";
 import { ACCESS_TOKEN_KEY } from "../config";
 
 export type HeadersType = {
-    headers: Record<string, string>
-}
+    headers: Record<string, string>;
+};
 
 export type AuthContext = {
-    token: string
-} & HeadersType
+    token: string;
+} & HeadersType;
 
-
-export const requiredAuth = async (): Promise<AuthContext |NextResponse> => {
+export const requiredAuth = async (): Promise<AuthContext | NextResponse> => {
     const cookie = await cookies();
 
-    const token = cookie.get(ACCESS_TOKEN_KEY)?.value
+    const token = cookie.get(ACCESS_TOKEN_KEY)?.value;
 
     if (!token) {
         return NextResponse.json({
-            messsage: 'Unauthenticated',
-            status: 401
-        })
+            messsage: "Unauthenticated",
+            status: 401,
+        });
     }
 
     return {
         token,
         headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-}
+            Authorization: `Bearer ${token}`,
+        },
+    };
+};
 
-export const withAuth = async<T>(
-    handler: (auth: AuthContext) => Promise<T>
+export const withAuth = async <T>(
+    handler: (auth: AuthContext) => Promise<T>,
 ) => {
-    const auth = await requiredAuth();
+    try {
+        const auth = await requiredAuth();
 
-    if (auth instanceof NextResponse) {
-        return auth
+        if (auth instanceof NextResponse) {
+            return auth;
+        }
+
+        return handler(auth);
+    } catch (err: unknown) {
+        const error = err as { status?: number; details?: object };
+        const status = error?.status ?? 500;
+        const details = error?.details ?? { message: "Request failed" };
+        return NextResponse.json(details, { status });
     }
-
-    return handler(auth)
-}
+};

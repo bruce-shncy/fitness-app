@@ -7,17 +7,16 @@ type ApiError = {
     error: Record<string, string>;
 };
 
-
 /**
  * Ensure all request are CSRF protected
  */
 
 const ensureCsrfCookie = async () => {
-    await fetch(`${API_BASE_URL?.replace("/api","")}/sanctum/csrf-cookie`, {
-        method: 'GET',
-        'credentials': 'include',
-    })
-}
+    await fetch(`${API_BASE_URL?.replace("/api", "")}/sanctum/csrf-cookie`, {
+        method: "GET",
+        credentials: "include",
+    });
+};
 
 /**
  * Creating request wrapper function
@@ -30,39 +29,40 @@ export const request = async <T>(
     path: string,
     method: HttpMethod = "GET",
     headerConfig: Record<string, string>,
-    body?: unknown
+    body?: unknown,
 ): Promise<T> => {
     // Create headers
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
         Accept: "application/json",
-        ... (headerConfig ?? {})
+        ...(headerConfig ?? {}),
     };
 
     // Create request config
     const requestConfig: RequestInit = {
         method,
         headers,
-        credentials: 'include',
+        credentials: "include",
     };
 
-    if (method !==  "GET") {
-         await ensureCsrfCookie()
+    if (method !== "GET") {
+        await ensureCsrfCookie();
     }
-    
+
     if (body && method !== "GET") {
         requestConfig.body = JSON.stringify(body);
     }
 
     try {
         // Create request
-    
+
         const response = await fetch(`${API_BASE_URL}${path}`, requestConfig);
-       
+
         if (!response.ok) {
             let details: ApiError | undefined;
             try {
                 const json = await response.json();
+
                 if (json && typeof json === "object") {
                     details = json as ApiError;
                 }
@@ -80,7 +80,7 @@ export const request = async <T>(
 
             error.status = response.status;
             error.details = details;
-
+            console.log("error", error);
             throw error;
         }
 
@@ -88,7 +88,6 @@ export const request = async <T>(
             return null as unknown as T;
         }
 
-        
         const text = await response.text();
 
         try {

@@ -5,56 +5,42 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { id: string } },
 ) => {
-
-    const { id } = await params
+    const { id } = await params;
     const payload = await req.json();
 
     return withAuth(async ({ headers }) => {
-        try {
-            const updated = await request<Organization>(
-                `/admin/organization/${id}`,
-                "PUT",
-                headers,
-                payload
-            );
-            return NextResponse.json(updated, { status: 200 });
-        } catch (err: any) {
-            const status = err?.status ?? 500;
-            const details = err?.details ?? { message: "Request failed" };
-            return NextResponse.json(details, { status });
-        }
+        const updated = await request<Organization>(
+            `/admin/organization/${id}`,
+            "PUT",
+            headers,
+            payload,
+        );
+        return NextResponse.json(updated, { status: 200 });
     });
 };
 
 export const DELETE = async (
-    req: NextRequest,
-    { params }: { params: { id?: string } }
+    _: NextRequest,
+    { params }: { params: { id?: string } },
 ) => {
- 
-    const { id } = await params
+    const { id } = await params;
 
     if (!id) {
         return NextResponse.json(
             { message: "Organization id is required" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
     return withAuth(async ({ headers }) => {
-        try {
-            const response = await request(
-                `/admin/organization/${id}`,
-                "DELETE",
-                headers
-            );
+        const response = await request(
+            `/admin/organization/${id}`,
+            "DELETE",
+            headers,
+        );
 
-            return NextResponse.json(response, { status: 200 });
-        } catch (err: any) {
-            const status = err?.status ?? 500;
-            const details = err?.details ?? { message:  err };
-            return NextResponse.json(details, { status });
-        }
+        return NextResponse.json(response, { status: 200 });
     });
 };

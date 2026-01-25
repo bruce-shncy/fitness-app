@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InvitationRequest;
+use App\Models\Invitation;
 use App\Services\InvitationServices;
 
 class InvitationController extends Controller
@@ -12,7 +13,11 @@ class InvitationController extends Controller
      */
     public function index()
     {
-        //
+        $invitations = Invitation::get()->latest();
+
+        return response()->json([
+            'data' => $invitations
+        ]);
     }
 
     /**
