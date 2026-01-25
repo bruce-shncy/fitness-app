@@ -12,9 +12,9 @@ interface LoginResponse {
 }
 
 export const loginAsAdmin = async (payload: AdminLoginPayload): Promise<LoginResponse> => {
-    return request(`/admin/login`, "POST", payload);
+    return request(`/admin/login`, "POST", {}, payload);
 };
 
 export const logoutAdmin = async () => {
-    return request(`/admin/logout`, "GET");
+    return request(`/admin/logout`, "GET", {});
 };

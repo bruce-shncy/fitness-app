@@ -22,6 +22,7 @@ return [
 
     'allowed_origins' => [
         'http://localhost:3000',
+        'https://app.decifit.test:3000',
     ],
 
     'allowed_origins_patterns' => [],
