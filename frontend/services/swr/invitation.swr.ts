@@ -22,7 +22,9 @@ const useInvitation = () => {
         ApiInvitationListResponse<Invitation[]>,
         ApiError,
         typeof key
-    >(key, fetcher);
+    >(key, fetcher, {
+        shouldRetryOnError: false,
+    });
 
     return {
         invitations: data?.data ?? [],

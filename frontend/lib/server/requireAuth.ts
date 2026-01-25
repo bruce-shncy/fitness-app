@@ -40,8 +40,9 @@ export const withAuth = async <T>(
             return auth;
         }
 
-        return handler(auth);
+        return await handler(auth);
     } catch (err: unknown) {
+        console.log("err", err);
         const error = err as { status?: number; details?: object };
         const status = error?.status ?? 500;
         const details = error?.details ?? { message: "Request failed" };

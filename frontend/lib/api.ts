@@ -80,7 +80,7 @@ export const request = async <T>(
 
             error.status = response.status;
             error.details = details;
-            console.log("error", error);
+            console.log("haha", error);
             throw error;
         }
 
