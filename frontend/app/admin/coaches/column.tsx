@@ -3,9 +3,9 @@
 import { Invitation } from "@/app/types/invitation.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
+
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -26,6 +26,16 @@ export const columns: ColumnDef<Invitation>[] = [
     {
         accessorKey: "organization",
         header: "Organization",
+        cell: ({ row }) => {
+            const organization = row.getValue<Invitation["organization"]>("organization");
+            return (
+                <div className="flex flex-col gap-1">
+                    <span className="font-medium">
+                        {organization?.name}
+                    </span>
+                </div>
+            )
+        }
     },
     {
         accessorKey: "status",

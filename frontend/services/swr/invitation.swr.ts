@@ -1,11 +1,12 @@
 import { ApiInvitationListResponse, Invitation } from "@/app/types/invitation.type";
 import useSWR from "swr";
 
-const key = "/api/auth/admin/invitations" as const;
+// Next js route 
+const invitationUrl = "/api/auth/admin/invitations" as const;
 
 export type ApiError = Error & { status?: number };
 
-const fetcher = async (url: typeof key): Promise<ApiInvitationListResponse<Invitation[]>> => {
+const fetcher = async (url: typeof invitationUrl): Promise<ApiInvitationListResponse<Invitation[]>> => {
     const response = await fetch(url, { method: 'GET' });
 
     if (!response.ok) {
@@ -21,8 +22,8 @@ const useInvitation = () => {
     const { data, error, isLoading, mutate } = useSWR<
         ApiInvitationListResponse<Invitation[]>,
         ApiError,
-        typeof key
-    >(key, fetcher, {
+        typeof invitationUrl
+    >(invitationUrl, fetcher, {
         shouldRetryOnError: false,
     });
 

@@ -1,0 +1,18 @@
+## Choose base image, every docker file starts with FROM
+## On any Laravel application you need PHP installed - so install PHP image
+FROM php:8.2-fpm
+
+## WORKDIR - navigate to this directoy WORKDIR<file-path>
+## /var/www/html - Standard folder for web apps in Linux
+WORKDIR /var/www/html
+
+## The base image is "Naked"
+## The 'php:8.2-fpm' image only has PHP - nothing else, it's like a brand new computer with nothing installed
+## We need install the following (git, curl, zip, unzip)
+##  (git) Composer downloads packages from GitHub using git
+##  (curl) Downloads files from the internet (some packages need this)
+##  (zip) Laravel packages come as .zip files
+##  (unzip) To extract those .zip files
+RUN apt-get update && apt-get install -y \
+
+

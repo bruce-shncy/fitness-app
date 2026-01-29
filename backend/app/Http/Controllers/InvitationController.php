@@ -13,7 +13,7 @@ class InvitationController extends Controller
      */
     public function index()
     {
-        $invitations = Invitation::with('userInvited')
+        $invitations = Invitation::with(['userInvited', 'organization'])
                         ->latest()
                         ->get();
 
